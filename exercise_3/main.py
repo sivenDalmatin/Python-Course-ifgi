@@ -1,3 +1,4 @@
+#possibilty 2 to use import. Now able to access modules of package directly
 from easy_shopping import Calculator, ShoppingCart
 
 

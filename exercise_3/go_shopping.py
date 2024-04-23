@@ -1,3 +1,4 @@
+# possibility 1 to import (always use: easy_shopping.module_name)
 import easy_shopping
 
 def main():
