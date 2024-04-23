@@ -1,5 +1,4 @@
-from easy_shopping.calculator import Calculator
-from easy_shopping.shopping import ShoppingCart
+from easy_shopping import Calculator, ShoppingCart
 
 
 def main():
