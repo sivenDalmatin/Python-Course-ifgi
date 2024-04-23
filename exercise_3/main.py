@@ -1,5 +1,5 @@
-from calculator import Calculator
-from shopping import ShoppingCart
+from easy_shopping.calculator import Calculator
+from easy_shopping.shopping import ShoppingCart
 
 
 def main():

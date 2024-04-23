@@ -1,13 +1,13 @@
 class ShoppingCart:
 
     def __init__(self):
+        #initalize an empty shopping cart
         self.items = {}
 
     def add_item(self, item):
         if item in self.items:
             self.items[item] += 1
         else:
-            print("Hi")
             self.items[item] = 1
 
     
