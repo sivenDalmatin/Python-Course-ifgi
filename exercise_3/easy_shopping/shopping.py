@@ -1,8 +1,13 @@
 class ShoppingCart:
+    """class which represents a shopping cart,
+     Includes methods for adding items, removing items and calculate the amount
+     of total items in the shopping cart"""
+    
 
     def __init__(self):
         #initalize an empty shopping cart
         self.items = {}
+
 
     def add_item(self, item):
         if item in self.items:
@@ -10,7 +15,6 @@ class ShoppingCart:
         else:
             self.items[item] = 1
 
-    
 
     def remove_item(self, item):
         #item has to be in cart to be removable
@@ -21,7 +25,7 @@ class ShoppingCart:
                 del self.items[item]
         else:
             return "this item is not in your cart"
-
+        
     
     def calc_quantity(self):
         return sum(self.items.values())
