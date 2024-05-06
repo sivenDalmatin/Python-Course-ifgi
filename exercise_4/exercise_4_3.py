@@ -6,9 +6,9 @@ from qgis.core import QgsVectorLayer, QgsProject
 
 # Path to data and QGIS-project
 #data_folder = r"C:\Users\Sven Harpering\sciebo\GIS-GK\GIS-GK_WS_23_24\GIS Data\Muenster"
-data_folder = r"C:\Users\Martin\Documents\WWU\6Semester\Python\Exercise4\Muenster"
+data_folder = r"C:\Users\Martin\Documents\WWU\6Semester\Python\Exercise4\Muenster\Muenster"
 #project_path = r"C:\Users\Sven Harpering\myFirstProject.qgz"  # for QGIS version 3+
-project_path = r"C:\Users\Martin\Documents\WWU\6Semester\Python\Exercise4\myFirstProject.qgz"
+project_path = r"C:\Users\Martin\Documents\WWU\6Semester\Python\Exercise4\mySecondProject.qgz"
 
 # List to store paths of shapefiles
 shapefile_paths = []
