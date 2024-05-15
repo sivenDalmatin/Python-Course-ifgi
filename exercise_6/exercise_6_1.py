@@ -3,7 +3,7 @@ from qgis.core import QgsVectorLayer, QgsField, QgsProject, QgsGeometry, QgsFeat
 
 # Define fields for attributes
 fields = [
-    QgsField("standard_land_value", QVariant.String),
+    QgsField("standard_land_value", QVariant.Double),
     QgsField("type", QVariant.String),
     QgsField("district", QVariant.String)
 ]
@@ -35,11 +35,20 @@ layer.startEditing()
 
 #create a feature for every line
 for line in lines:
-#extract values from one line
+    #extract values from one line
     values = line.strip().split(";")
+    #get standard_land_value
     standard_land_value = values[standard_land_value_index]
+    #check if string has to be type casted
+    if "," in standard_land_value:
+        standard_land_value = standard_land_value.replace(",", ".")
+    #convert to float
+    float(standard_land_value)
+    #get type
     type_value = values[type_index]
+    #get district
     district = values[district_index]
+    #get geometry
     geometry_wkt = values[geometry_index]
 
     # Create geometry from WKT
@@ -57,7 +66,3 @@ layer.commitChanges()
 
 # Add layer to the project
 QgsProject.instance().addMapLayer(layer)
-
-
-
-
