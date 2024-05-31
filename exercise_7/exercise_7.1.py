@@ -25,6 +25,9 @@ parcels_layer = QgsProject.instance().mapLayersByName("Muenster_Parcels")[0]
 housenumber_layer = QgsProject.instance().mapLayersByName("House_Numbers")[0]
 pools_layer = QgsProject.instance().mapLayersByName("public_swimming_pools")[0]
 
+#set a path to where the png is stored!!!!!
+picturePath = '/Users/finnole/Uni/Sem 6/ArcPy:QPy/feature.png'
+
 
 
 class CreateCityDistrictProfile(QgsProcessingAlgorithm):
@@ -88,7 +91,6 @@ class CreateCityDistrictProfile(QgsProcessingAlgorithm):
         iface.mapCanvas().setExtent(selected_dist.geometry().boundingBox())
         iface.mapCanvas().refresh()
         time.sleep(5)
-        picturePath = '/Users/finnole/Uni/Sem 6/ArcPy:QPy/feature.png'
         iface.mapCanvas().saveAsImage(picturePath)
         return picturePath
 
