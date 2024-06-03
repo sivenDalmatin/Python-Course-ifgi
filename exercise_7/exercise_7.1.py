@@ -108,7 +108,7 @@ class CreateCityDistrictProfile(QgsProcessingAlgorithm):
         c.drawString(30, height - 80, f"The total Area of {attributeListe['district_name']} is {attributeListe['area']:.2f} squarekilometers and lays within the parent district of {attributeListe['parent_district']}")
         c.drawString(30, height - 100, f"The District has {attributeListe['num_households']} housholds and contains {attributeListe['num_parcels']} parcels")
         if attributeListe['num_pools_or_schools'] == 0:
-            c.drawString(30, height - 120, f"There are no {attributeListe['num_pools_or_schools']} within {attributeListe['district_name']}")
+            c.drawString(30, height - 120, f"There are no {attributeListe['pools_or_schools']} within {attributeListe['district_name']}")
         else:
             c.drawString(30, height - 120, f"{attributeListe['num_pools_or_schools']} {attributeListe['pools_or_schools']} lay within {attributeListe['district_name']}")
         
