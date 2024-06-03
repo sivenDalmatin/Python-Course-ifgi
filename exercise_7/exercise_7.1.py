@@ -110,7 +110,7 @@ class CreateCityDistrictProfile(QgsProcessingAlgorithm):
         if attributeListe['num_pools_or_schools'] == 0:
             c.drawString(30, height - 120, f"There are no {attributeListe['pools_or_schools']} within {attributeListe['district_name']}")
         else:
-            c.drawString(30, height - 120, f"{attributeListe['num_pools_or_schools']} {attributeListe['pools_or_schools']} lay within {attributeListe['district_name']}")
+            c.drawString(30, height - 120, f"There are {attributeListe['num_pools_or_schools']} {attributeListe['pools_or_schools']} within {attributeListe['district_name']}")
         
         #check if picture available, then include it in the pdf
         if picturePath:
