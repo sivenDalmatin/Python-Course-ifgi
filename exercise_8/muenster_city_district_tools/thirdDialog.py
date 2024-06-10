@@ -10,8 +10,9 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from qgis.PyQt import QtWidgets
-from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QMessageBox, QFileDialog
 from qgis.utils import iface
+from qgis.core import QgsProject
 
 
 class Ui_ExportWindow(object):
@@ -52,31 +53,47 @@ class Ui_ExportWindow(object):
 
     def createCSV(self):
 
-        try:
-            layer = iface.activeLayer()
-            features = layer.selectedFeatures()
-            
-            options = QtWidgets.QFileDialog.Options()
-            fileName, _ = QtWidgets.QfileDialog.getSavefileName(None, "Save File", "", "All files (*);; CSV File (*.csv)")
-            if fileName:
-                try:
-                    file = open(fileName, "w")
+        def calculateArea(self, selected_dist):
+            geom = selected_dist.geometry()
+            return geom.area() / 1000000
+        
+        def countFeaturesInDistrict(self, selected_dist, countedLayer):
+            number_of_features = 0
+            for feature in countedLayer.getFeatures():
+                if feature.geometry().within(selected_dist.geometry()):
+                    number_of_features += 1
+            return number_of_features
 
-                    lines = ["X;Y;Windparknummer"]
+        #try:
+        layer = iface.activeLayer()
+        features = layer.selectedFeatures()
+        
+        
+        options = QtWidgets.QFileDialog.Options()
+        fileName, _ = QtWidgets.QFileDialog.getSaveFileName(None, "Save File", "", "All files (*);; CSV File (*.csv)")
+        if fileName:
+            try:
+                with open(fileName, "w") as file:
+                    
+                    lines = ["districtName;size;numberOfParcels;numberOfSchools"]
+
+                    parcels = QgsProject.instance().mapLayersByName("Muenster_Parcels")[0]
+                    schools = QgsProject.instance().mapLayersByName("Schools")[0]
 
                     for f in features:
-                        lines.append(f"{f.attribute(1)};{f.attribute(2)};{f.attribute(3)}")
+                        
+                        area = calculateArea(self, f)
+                        numberOfParcels = countFeaturesInDistrict(self, f, parcels)
+                        numberOfSchools = countFeaturesInDistrict(self, f, schools)
+
+                        lines.append(f"{f.attribute(1)};{area};{numberOfParcels};{numberOfSchools}")
 
                     text = "\n".join(lines)
                     file.write(text)
-                    file.close()
                     QMessageBox.information(None, "Success", "The file was successfully created")
 
-                except Exception as e:
-                    QMessageBox.critical(None, "Error", "The file cannot be created")
-                
-            else:
-                QMessageBox.critical(None, "Error", "The file cannot be created")
-
-        except Exception as e:
+            except Exception as e:
+                QMessageBox.critical(None, "Error", "Something went wrong")
+            
+        else:
             QMessageBox.critical(None, "Error", "The file cannot be created")
