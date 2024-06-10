@@ -28,6 +28,7 @@ from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
 from PyQt5.QtWidgets import QMessageBox
 from qgis.utils import iface
+from qgis.core import QgsProject
 
 from .secondDialog import Ui_DistrictProfileWindow
 from .thirdDialog import Ui_ExportWindow
@@ -51,43 +52,49 @@ class MuensterCityDistrictToolsDialog(QtWidgets.QDialog, FORM_CLASS):
     def openSecondDialog(self):
 
         parent = iface.mainWindow() 
-
         layer = iface.activeLayer()
-
         features = layer.selectedFeatures()
 
-        if len(features) != 1:
-            QMessageBox.warning(parent, "Only one district", "Please check if only one district is selected")
+        if len(features) == 0:
+            QMessageBox.warning(parent, "No district", "Please check that one district is selected")
+        elif len(features) > 1:
+            QMessageBox.warning(parent, "More than one districts", "Please check that only one district is selected")
         else:
             secondDialog = QtWidgets.QDialog()
             ui = Ui_DistrictProfileWindow()
             ui.setupUi(secondDialog)
-            secondDialog.exec_()
+            pools = QgsProject.instance().mapLayersByName("Muenster_City_Districts")[0]
+            ui.OkButtonInformation.clicked.connect(secondDialog.accept)
+            ui.InformationText.setText(f"{pools[0]}")
+            
 
             f = features[0]
+
+            secondDialog.exec_()
 
             #logic for displaying information
 
     def openThirdDialog(self):
 
         parent = iface.mainWindow() 
-
         layer = iface.activeLayer()
-
         features = layer.selectedFeatures()
 
-        if len(features) != 1:
-            QMessageBox.warning(parent, "Only one district should", "Please check if only one district is selected")
+        if len(features) == 0:
+            QMessageBox.warning(parent, "No district", "Please check that one district is selected")
+        elif len(features) > 1:
+            QMessageBox.warning(parent, "More than one districts", "Please check that only one district is selected")
         else:
             thirdDialog = QtWidgets.QDialog()
             ui = Ui_ExportWindow()
             ui.setupUi(thirdDialog)
+            #Aufrufen der Funktion zum Erstellen der pdf
+            #ui.pdfExportButton.clicked.connect()
+            ui.csvExportButton.clicked.connect(Ui_ExportWindow.createCSV)
+            ui.okButtonExport.clicked.connect(thirdDialog.accept)
             thirdDialog.exec_()
 
-            #ui.csvExportButton.clicked.connect(Ui_ExportWindow.createCSV)
 
-            f = features[0]
-    
 
 
 
