@@ -73,10 +73,10 @@ class Ui_ExportWindow(object):
                     QMessageBox.information(None, "Success", "The file was successfully created")
 
                 except Exception as e:
-                    QMessageBox.critical(None, "Error", "The cannot be created")
+                    QMessageBox.critical(None, "Error", "The file cannot be created")
                 
             else:
-                QMessageBox.critical(None, "Error", "The cannot be created")
+                QMessageBox.critical(None, "Error", "The file cannot be created")
 
         except Exception as e:
-            QMessageBox.critical(None, "Error", "The cannot be created")
+            QMessageBox.critical(None, "Error", "The file cannot be created")
