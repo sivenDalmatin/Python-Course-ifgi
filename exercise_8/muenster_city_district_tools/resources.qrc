@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/plugins/Muenster_City_District_Tools" >
+        <file>icon.png</file>
+    </qresource>
+</RCC>
