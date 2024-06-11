@@ -32,6 +32,7 @@ from qgis.core import QgsProject
 
 from .secondDialog import Ui_DistrictProfileWindow
 from .thirdDialog import Ui_ExportWindow
+from .pdfprofilelogic import createCityDistrictProfilePDF
 
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -50,7 +51,54 @@ class MuensterCityDistrictToolsDialog(QtWidgets.QDialog, FORM_CLASS):
         self.setupUi(self)
 
     def openSecondDialog(self):
+        def createProfile(self, features):
+            def calculateArea(self, selected_dist):
+                geom = selected_dist.geometry()
+                return geom.area() / 1000000
 
+            def countFeaturesInDistrict(self, selected_dist, countedLayer):
+                number_of_features = 0
+                for feature in countedLayer.getFeatures():
+                    if feature.geometry().within(selected_dist.geometry()):
+                        number_of_features += 1
+                return number_of_features   
+
+            #get layers and validate them being there
+            try:
+                parcels = QgsProject.instance().mapLayersByName("Muenster_Parcels")[0]
+                schools = QgsProject.instance().mapLayersByName("Schools")[0]
+                pools = QgsProject.instance().mapLayersByName("public_swimming_pools")[0]
+                housenumbers = QgsProject.instance().mapLayersByName("House_Numbers")[0]
+            except IndexError:
+                QMessageBox.warning(self, "Layer Missing", "One or more required layers are not found")
+                return None
+
+            for f in features:
+                #get name of district and parent distirct
+                district_name = f['Name']
+                parentDistrict_name = f['P_District']
+
+                #calculate areo of district
+                area = calculateArea(self, f)
+
+                #counts the respective amount of * in the district
+                numberOfParcels = countFeaturesInDistrict(self, f, parcels)
+                numberOfSchools = countFeaturesInDistrict(self, f, schools)
+                numberOfPools = countFeaturesInDistrict(self, f, pools)
+                numberOfHouseholds = countFeaturesInDistrict(self, f, housenumbers)
+
+            attributeList = {
+                'district_name': district_name,
+                'parentDistrict_name': parentDistrict_name,
+                'area': area,
+                'numberOfHouseholds': numberOfHouseholds,
+                'numberOfParcels': numberOfParcels,
+                'numberOfSchools': numberOfSchools,
+                'numberOfPools': numberOfPools
+            }
+            return attributeList
+
+        #get selected feature district
         parent = iface.mainWindow() 
         layer = iface.activeLayer()
         features = layer.selectedFeatures()
@@ -63,14 +111,20 @@ class MuensterCityDistrictToolsDialog(QtWidgets.QDialog, FORM_CLASS):
             secondDialog = QtWidgets.QDialog()
             ui = Ui_DistrictProfileWindow()
             ui.setupUi(secondDialog)
-            pools = QgsProject.instance().mapLayersByName("Muenster_City_Districts")[0]
             ui.OkButtonInformation.clicked.connect(secondDialog.accept)
-            ui.InformationText.setText(f"{pools[0]}")
+
+            print(self)
+
+            infoList = createProfile(self, features)
             
+            if infoList:
+                ui.InformationText.setText(
+                        f"This is the City District Profile of {infoList['district_name']}. {infoList['district_name']} has a size of {infoList['area']} km^2 and is within the parent district {infoList['parentDistrict_name']}."
+                        f"There are {infoList['numberOfHouseholds']} households, {infoList['numberOfParcels']} parcels, {infoList['numberOfSchools']} schools, "
+                        f"and {infoList['numberOfPools']} pools in the district"
+                    )
 
-            f = features[0]
-
-            secondDialog.exec_()
+                secondDialog.exec_()
 
             #logic for displaying information
 
@@ -89,7 +143,7 @@ class MuensterCityDistrictToolsDialog(QtWidgets.QDialog, FORM_CLASS):
             ui = Ui_ExportWindow()
             ui.setupUi(thirdDialog)
             #Aufrufen der Funktion zum Erstellen der pdf
-            #ui.pdfExportButton.clicked.connect()
+            ui.pdfExportButton.clicked.connect(createCityDistrictProfilePDF.processAlgorithm)
             ui.csvExportButton.clicked.connect(Ui_ExportWindow.createCSV)
             ui.okButtonExport.clicked.connect(thirdDialog.accept)
             thirdDialog.exec_()

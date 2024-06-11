@@ -22,7 +22,7 @@ class Ui_DistrictProfileWindow(object):
         self.OkButtonInformation.setGeometry(QtCore.QRect(170, 390, 171, 28))
         self.OkButtonInformation.setObjectName("OkButtonInformation")
         self.InformationText = QtWidgets.QLabel(self.DistrictInformation)
-        self.InformationText.setGeometry(QtCore.QRect(20, 30, 311, 31))
+        self.InformationText.setGeometry(QtCore.QRect(20, 30, 311, 310))
         self.InformationText.setText("")
         self.InformationText.setWordWrap(True)
         self.InformationText.setObjectName("InformationText")
