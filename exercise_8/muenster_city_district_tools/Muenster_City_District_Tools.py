@@ -191,8 +191,11 @@ class MuensterCityDistrictTools:
         if self.first_start == True:
             self.first_start = False
             self.dlg = MuensterCityDistrictToolsDialog()
+            #if getDataButton is clicked the second dialog will appear
             self.dlg.getDataButton.clicked.connect(MuensterCityDistrictToolsDialog.openSecondDialog)
+            #if getDataButton is clicked the third dialog will appear
             self.dlg.exportDataButton.clicked.connect(MuensterCityDistrictToolsDialog.openThirdDialog)
+            
 
         # show the dialog
         self.dlg.show()

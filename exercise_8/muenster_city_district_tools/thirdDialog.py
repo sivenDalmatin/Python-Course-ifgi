@@ -51,12 +51,15 @@ class Ui_ExportWindow(object):
         self.pdfDescription.setText(_translate("ExportWindow", "Creates Information from the selected district in a pdf file"))
         self.csvDescription.setText(_translate("ExportWindow", "Creates Information from the selected district in a csv file"))
 
+    #function to create and export the csv
     def createCSV(self):
 
+        #function to calculate area of the selected district
         def calculateArea(self, selected_dist):
             geom = selected_dist.geometry()
             return geom.area() / 1000000
         
+        #function to count Features in the selected district
         def countFeaturesInDistrict(self, selected_dist, countedLayer):
             number_of_features = 0
             for feature in countedLayer.getFeatures():
@@ -64,22 +67,24 @@ class Ui_ExportWindow(object):
                     number_of_features += 1
             return number_of_features
 
-        #try:
+        #get active layer and the selected features
         layer = iface.activeLayer()
         features = layer.selectedFeatures()
         
-        
-        options = QtWidgets.QFileDialog.Options()
+        #show dialog to ask the user for a file that should be created
         fileName, _ = QtWidgets.QFileDialog.getSaveFileName(None, "Save File", "", "All files (*);; CSV File (*.csv)")
+        #if the fileName was created create the csv, otherwise the user cancels the process and a qmessagebox appears.
         if fileName:
             try:
                 with open(fileName, "w") as file:
                     
+                    #create header
                     lines = ["districtName;size;numberOfParcels;numberOfSchools"]
 
                     parcels = QgsProject.instance().mapLayersByName("Muenster_Parcels")[0]
                     schools = QgsProject.instance().mapLayersByName("Schools")[0]
 
+                    #create feature with attributes
                     for f in features:
                         
                         area = calculateArea(self, f)
@@ -88,12 +93,13 @@ class Ui_ExportWindow(object):
 
                         lines.append(f"{f.attribute(1)};{area};{numberOfParcels};{numberOfSchools}")
 
+                    #add feature to csv
                     text = "\n".join(lines)
                     file.write(text)
                     QMessageBox.information(None, "Success", "The file was successfully created")
 
             except Exception as e:
-                QMessageBox.critical(None, "Error", "Something went wrong")
+                QMessageBox.critical(None, "Error", "Something in the script went wrong")
             
         else:
-            QMessageBox.critical(None, "Error", "The file cannot be created")
+            QMessageBox.critical(None, "Error", "The user has canceled the export")
