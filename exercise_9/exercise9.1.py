@@ -1,13 +1,14 @@
 #define workspace first
+#arcpy.env.workspace = r"<Path to the geodatabase>"
 
-# Define output feature class
+# output feature class
 output_fc = "active_assets"
 
-# get all point geometry feature classes and exclude the "active_assets"
+# get point geometry classes and exclude "active_assets"
 fc_list = arcpy.ListFeatureClasses(feature_type='Point')
 fc_list = [fc for fc in fc_list if fc != output_fc]
 
-# Iterate over the feature classes
+
 for fc in fc_list:
     # Create the search cursor
     scur = arcpy.da.SearchCursor(fc, ['SHAPE@', 'status', 'type'], "status='active'")
