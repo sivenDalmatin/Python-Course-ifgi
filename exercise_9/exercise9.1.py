@@ -1,4 +1,7 @@
+import arcpy
+
 #define workspace first
+arcpy.env.overwriteOutput = True
 #arcpy.env.workspace = r"<Path to the geodatabase>"
 
 # output feature class
