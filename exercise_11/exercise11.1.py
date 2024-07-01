@@ -1,7 +1,15 @@
-import arcpy
+import arcpy, time
 
 def find_nearest_bus_stop(input_fc, stops_fc, name_field, name_value):
     try:
+
+        arcpy.SetProgressor(type='step',message='Progress',min_range=0, max_range=4,step_value=1)
+        time.sleep(0.5)
+        # checking that parameters are correct
+        arcpy.SetProgressorLabel("Checking the inputs spatial reference systems")
+        arcpy.SetProgressorPosition(0)
+        time.sleep(2)
+
         # input feature class is in Web Mercator
         input_spatial_ref = arcpy.Describe(input_fc).spatialReference
         web_mercator = arcpy.SpatialReference(3857)
@@ -20,11 +28,20 @@ def find_nearest_bus_stop(input_fc, stops_fc, name_field, name_value):
             arcpy.management.Project(stops_fc, projected_stops_fc, web_mercator)
             stops_fc = projected_stops_fc
 
+        arcpy.SetProgressorLabel("create a layer with name field and field value")
+        arcpy.SetProgressorPosition(1)
+        time.sleep(2)
+
 
         # Build a layer with the name field & field value
         sql = f"{name_field}='{name_value}'"
         arcpy.AddMessage(f"SQL Clause {sql}")
         arcpy.MakeFeatureLayer_management(in_features=stops_fc,out_layer='feats_to_check',where_clause=sql)
+
+
+        arcpy.SetProgressorLabel("calculate nearest distance")
+        arcpy.SetProgressorPosition(2)
+        time.sleep(2)
 
         # Run Near tool 
         arcpy.analysis.Near(input_fc, 'feats_to_check')
@@ -41,6 +58,10 @@ def find_nearest_bus_stop(input_fc, stops_fc, name_field, name_value):
         if near_fid is None:
             arcpy.AddMessage("No nearby bus stop found.")
             return
+        
+        arcpy.SetProgressorLabel("get name of the nearest bus stop")
+        arcpy.SetProgressorPosition(3)
+        time.sleep(2)
 
         # get name of the nearest bus stop
         bus_stop_name = None
@@ -49,7 +70,7 @@ def find_nearest_bus_stop(input_fc, stops_fc, name_field, name_value):
             for row in cursor:
                 bus_stop_name = row[0]
 
-        # If the bus stop name is None, handle it gracefully
+        # check if bus stop is none
         if bus_stop_name is None:
             bus_stop_name = "Unknown"
 
