@@ -3,7 +3,7 @@ import arcpy, time
 def find_nearest_bus_stop(input_fc, stops_fc, name_field, name_value):
     try:
 
-        arcpy.SetProgressor(type='step',message='Progress',min_range=0, max_range=4,step_value=1)
+        arcpy.SetProgressor(type='step',message='Progress',min_range=0, max_range=3,step_value=1)
         time.sleep(0.5)
         # checking that parameters are correct
         arcpy.SetProgressorLabel("Checking the inputs spatial reference systems")
@@ -33,7 +33,7 @@ def find_nearest_bus_stop(input_fc, stops_fc, name_field, name_value):
         time.sleep(2)
 
 
-        # Build a layer with the name field & field value
+        # Build layer with the name field and field value
         sql = f"{name_field}='{name_value}'"
         arcpy.AddMessage(f"SQL Clause {sql}")
         arcpy.MakeFeatureLayer_management(in_features=stops_fc,out_layer='feats_to_check',where_clause=sql)
@@ -43,7 +43,7 @@ def find_nearest_bus_stop(input_fc, stops_fc, name_field, name_value):
         arcpy.SetProgressorPosition(2)
         time.sleep(2)
 
-        # Run Near tool 
+        # Near tool 
         arcpy.analysis.Near(input_fc, 'feats_to_check')
 
         # get the NEAR_FID and NEAR_DIST via the input feature class
@@ -88,7 +88,7 @@ stops_fc = arcpy.GetParameterAsText(1)
 name_field = arcpy.GetParameterAsText(2)
 name_value = arcpy.GetParameterAsText(3)
 
-# Call the function with the input parameters
+# funtion call
 find_nearest_bus_stop(input_fc, stops_fc, name_field, name_value)
 
 
