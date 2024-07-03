@@ -3,7 +3,7 @@ import arcpy, time
 def find_nearest_bus_stop(input_fc, stops_fc, name_field, name_value):
     try:
 
-        arcpy.SetProgressor(type='step',message='Progress',min_range=0, max_range=3,step_value=1)
+        arcpy.SetProgressor(type='step',message='Progress',min_range=0, max_range=4,step_value=1)
         time.sleep(0.5)
         # checking that parameters are correct
         arcpy.SetProgressorLabel("Checking the inputs spatial reference systems")
@@ -31,10 +31,15 @@ def find_nearest_bus_stop(input_fc, stops_fc, name_field, name_value):
         arcpy.SetProgressorLabel("create a layer with name field and field value")
         arcpy.SetProgressorPosition(10)
         time.sleep(2)
+        
+        #Check whether selected name field is string or numeric
+        if name_field.lower() in ["fid", "objectid", "osm_id"]:
+            sql = f"{name_field} = {name_value}"
+        else:
+            sql = f"{name_field} = '{name_value}'"
 
 
-        # Build layer with the name field and field value
-        sql = f"{name_field}='{name_value}'"
+        # Build layer with name field and field value
         arcpy.AddMessage(f"SQL Clause {sql}")
         arcpy.MakeFeatureLayer_management(in_features=stops_fc,out_layer='feats_to_check',where_clause=sql)
 
@@ -90,5 +95,3 @@ name_value = arcpy.GetParameterAsText(3)
 
 # funtion call
 find_nearest_bus_stop(input_fc, stops_fc, name_field, name_value)
-
-
