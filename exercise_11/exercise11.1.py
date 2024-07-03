@@ -7,7 +7,7 @@ def find_nearest_bus_stop(input_fc, stops_fc, name_field, name_value):
         time.sleep(0.5)
         # checking that parameters are correct
         arcpy.SetProgressorLabel("Checking the inputs spatial reference systems")
-        arcpy.SetProgressorPosition(0)
+        arcpy.SetProgressorPosition()
         time.sleep(2)
 
         # input feature class is in Web Mercator
@@ -29,7 +29,7 @@ def find_nearest_bus_stop(input_fc, stops_fc, name_field, name_value):
             stops_fc = projected_stops_fc
 
         arcpy.SetProgressorLabel("create a layer with name field and field value")
-        arcpy.SetProgressorPosition(1)
+        arcpy.SetProgressorPosition(10)
         time.sleep(2)
 
 
@@ -40,7 +40,7 @@ def find_nearest_bus_stop(input_fc, stops_fc, name_field, name_value):
 
 
         arcpy.SetProgressorLabel("calculate nearest distance")
-        arcpy.SetProgressorPosition(2)
+        arcpy.SetProgressorPosition(15)
         time.sleep(2)
 
         # Near tool 
@@ -60,7 +60,7 @@ def find_nearest_bus_stop(input_fc, stops_fc, name_field, name_value):
             return
         
         arcpy.SetProgressorLabel("get name of the nearest bus stop")
-        arcpy.SetProgressorPosition(3)
+        arcpy.SetProgressorPosition(19)
         time.sleep(2)
 
         # get name of the nearest bus stop
